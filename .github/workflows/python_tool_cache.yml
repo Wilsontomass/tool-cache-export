@@ -1,0 +1,40 @@
+name: Upload windows python tool cache
+on: 
+  push:
+  workflow_dispatch:
+jobs:
+  upload_tool_cache:
+    runs-on: windows-latest
+    steps:
+      - name: Clear any existing tool cache
+        run: |
+          mv "${{ runner.tool_cache }}" "${{ runner.tool_cache }}.old"
+          mkdir -p "${{ runner.tool_cache }}"
+      - name: Setup python 3.7
+        uses: actions/setup-python@v4 
+        with:
+          python-version: '3.7' 
+      - name: Setup python 3.8
+        uses: actions/setup-python@v4 
+        with:
+          python-version: '3.8' 
+      - name: Setup python 3.9
+        uses: actions/setup-python@v4 
+        with:
+          python-version: '3.9' 
+      - name: Setup python 3.10
+        uses: actions/setup-python@v4 
+        with:
+          python-version: '3.10' 
+      - name: Setup python 3.11
+        uses: actions/setup-python@v4 
+        with:
+          python-version: '3.11' 
+      - name: Archive tool cache
+        run: |
+          cd "${{ runner.tool_cache }}"
+          tar -czf tool_cache.tar.gz *
+      - name: Upload tool cache artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: ${{runner.tool_cache}}/tool_cache.tar.gz
